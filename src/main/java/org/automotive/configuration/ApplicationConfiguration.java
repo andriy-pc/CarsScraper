@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {"org.automotive"})
 public class ApplicationConfiguration {
 
-    @Bean
-    ObjectMapper pureObjectMapper() {
-        return new ObjectMapper();
-    }
-
+  @Bean
+  ObjectMapper pureObjectMapper() {
+    return new ObjectMapper();
+  }
 }

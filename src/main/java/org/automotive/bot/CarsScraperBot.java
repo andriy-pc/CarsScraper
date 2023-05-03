@@ -14,42 +14,39 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Slf4j
 public class CarsScraperBot extends TelegramWebhookBot implements Bot {
 
-    private final String botUsername = System.getenv("BOT_USERNAME");
+  private final String botUsername = System.getenv("BOT_USERNAME");
 
-    private final String botPath = System.getenv("BOT_PATH");
-    ;
+  private final String botPath = System.getenv("BOT_PATH");
+  ;
 
-    @Override
-    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        throw new NotImplementedException("Method was not implemented");
+  @Override
+  public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+    throw new NotImplementedException("Method was not implemented");
+  }
+
+  @Override
+  public String getBotPath() {
+    return botPath;
+  }
+
+  @Override
+  public String getBotUsername() {
+    return botUsername;
+  }
+
+  @Override
+  public void onRegister() {
+    super.onRegister();
+  }
+
+  @Override
+  public Message sendMessage(String message, Long chatId) {
+    SendMessage sendMessage = SendMessage.builder().chatId(chatId).text(message).build();
+    try {
+      log.info("Sending message to chatId: {}", chatId);
+      return execute(sendMessage);
+    } catch (TelegramApiException e) {
+      throw new RuntimeException(e);
     }
-
-    @Override
-    public String getBotPath() {
-        return botPath;
-    }
-
-    @Override
-    public String getBotUsername() {
-        return botUsername;
-    }
-
-    @Override
-    public void onRegister() {
-        super.onRegister();
-    }
-
-    @Override
-    public Message sendMessage(String message, Long chatId) {
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(chatId)
-                .text(message)
-                .build();
-        try {
-            log.info("Sending message to chatId: {}", chatId);
-            return execute(sendMessage);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
-    }
+  }
 }

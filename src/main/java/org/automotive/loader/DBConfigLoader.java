@@ -1,4 +1,3 @@
 package org.automotive.loader;
 
-public interface DBConfigLoader<T> extends ConfigLoader<T> {
-}
+public interface DBConfigLoader<T> extends ConfigLoader<T> {}

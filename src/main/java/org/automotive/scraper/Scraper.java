@@ -2,16 +2,15 @@ package org.automotive.scraper;
 
 public interface Scraper {
 
-    String scrape();
+  String scrape();
 
-    void openSite();
+  void openSite();
 
-    void applyFilters();
+  void applyFilters();
 
-    String search();
+  String search();
 
-    void nextPage();
+  void nextPage();
 
-    boolean proceedSearching();
-
+  boolean proceedSearching();
 }
