@@ -1,25 +1,32 @@
 package org.automotive.scraper.autoria;
 
-import static org.automotive.constants.StringConstants.BUTTON_TAG_NAME;
-import static org.automotive.constants.StringConstants.HREF_ATTRIBUTE_NAME;
-import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.automotive.javabean.CarInfo;
+import org.automotive.loader.ScraperConfigLoader;
 import org.automotive.scraper.AbstractScraper;
+import org.automotive.utils.EnvVarUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.automotive.constants.StringConstants.*;
+import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
+
 @Component
 public class AutoriaScraper extends AbstractScraper {
+
+  public AutoriaScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper) {
+    super(scraperConfigLoader, pureObjectMapper, AUTORIA_SITE_NAME);
+  }
 
   @Override
   public void openSite() {
@@ -102,7 +109,7 @@ public class AutoriaScraper extends AbstractScraper {
   }
 
   @Override
-  public String search() {
+  public void search() {
     webDriver
         .findElement(By.className(CLASSNAME_OF_SEARCH_BUTTON_ON_MAIN_HTML_PAGE))
         .findElement(By.tagName(BUTTON_TAG_NAME))
@@ -111,7 +118,10 @@ public class AutoriaScraper extends AbstractScraper {
     new WebDriverWait(webDriver, Duration.of(5, ChronoUnit.SECONDS))
         .until(
             driver -> driver.findElement(By.id(ID_OF_SEARCH_RESULTS_HTML_ELEMENT)).isDisplayed());
+  }
 
+  @Override
+  public String extractCarsInfo() {
     List<WebElement> cars = webDriver.findElements(By.className(CLASSNAME_OF_SINGLE_RESULT_ENTRY));
     return cars.stream()
         .map(this::extractCarInfo)
@@ -164,12 +174,14 @@ public class AutoriaScraper extends AbstractScraper {
 
   @Override
   public void nextPage() {
-    // TODO: implement
+    webDriver.get(webDriver.findElement(By.className(NEXT_PAGE_BUTTON_CLASSNAME)).getAttribute(HREF_ATTRIBUTE_NAME));
   }
 
   @Override
   public boolean proceedSearching() {
-    // TODO: implement logic to detect if further scraping is required
-    return false;
+    return scrapedPages.get()
+        < Integer.parseInt(
+            EnvVarUtils.getStringOrDefault(
+                AUTORIA_PAGES_TO_SCRAPE_ENV_VAR_NAME, DEFAULT_COUNT_OF_PAGES_TO_SCRAPE));
   }
 }
