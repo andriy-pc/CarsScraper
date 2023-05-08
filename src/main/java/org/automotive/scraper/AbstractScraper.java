@@ -1,6 +1,11 @@
 package org.automotive.scraper;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.automotive.constants.StringConstants.FAILED_TO_STRINGIFY_SCRAPING_RESULTS;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.PreDestroy;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.automotive.javabean.CarInfo;
@@ -9,14 +14,11 @@ import org.automotive.loader.ScraperConfigLoader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import javax.annotation.PreDestroy;
-
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.automotive.constants.StringConstants.FAILED_TO_STRINGIFY_SCRAPING_RESULTS;
-
 @Slf4j
 @NoArgsConstructor
 public abstract class AbstractScraper implements Scraper {
+
+  protected final AtomicInteger scrapedPages = new AtomicInteger(1);
 
   protected ScraperConfig scraperConfig;
   protected WebDriver webDriver;
@@ -34,10 +36,12 @@ public abstract class AbstractScraper implements Scraper {
       initSession();
       openSite();
       applyFilters();
-      searchResult = new StringBuilder(search());
+      search();
+      searchResult = new StringBuilder(extractCarsInfo());
       while (proceedSearching()) {
+        scrapedPages.incrementAndGet();
         nextPage();
-        searchResult.append(search());
+        searchResult.append(extractCarsInfo());
       }
     } catch (Exception e) {
      log.error("Exception occurred during scraping. Exception: ", e);

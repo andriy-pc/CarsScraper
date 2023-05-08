@@ -1,12 +1,11 @@
 package org.automotive.loader;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.automotive.javabean.ScraperConfig;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @Profile("pseudo-profiling")

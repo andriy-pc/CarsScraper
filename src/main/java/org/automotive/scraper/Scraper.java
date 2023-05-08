@@ -8,7 +8,9 @@ public interface Scraper {
 
   void applyFilters();
 
-  String search();
+  void search();
+
+  String extractCarsInfo();
 
   void nextPage();
 

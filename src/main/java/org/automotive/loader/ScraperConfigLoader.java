@@ -1,8 +1,7 @@
 package org.automotive.loader;
 
-import org.automotive.javabean.ScraperConfig;
-
 import java.util.List;
+import org.automotive.javabean.ScraperConfig;
 
 public interface ScraperConfigLoader extends ConfigLoader<ScraperConfig> {
 
