@@ -1,13 +1,6 @@
 package org.automotive.scraper.autoria;
 
-import static org.automotive.constants.StringConstants.BUTTON_TAG_NAME;
-import static org.automotive.constants.StringConstants.HREF_ATTRIBUTE_NAME;
-import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.automotive.javabean.CarInfo;
@@ -18,7 +11,17 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.automotive.constants.StringConstants.BUTTON_TAG_NAME;
+import static org.automotive.constants.StringConstants.HREF_ATTRIBUTE_NAME;
+import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
+
 @Component
+@RequiredArgsConstructor
 public class AutoriaScraper extends AbstractScraper {
 
   @Override

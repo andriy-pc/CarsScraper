@@ -1,18 +1,24 @@
 package org.automotive.executor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.automotive.scraper.Scraper;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@NoArgsConstructor
-@AllArgsConstructor
 @Slf4j
 public class ScrapingExecutor {
+
+  public ScrapingExecutor() {
+  }
+
+  @Autowired
+  public ScrapingExecutor(List<Scraper> scrapers) {
+    this.scrapers = scrapers;
+  }
 
   private List<Scraper> scrapers;
 

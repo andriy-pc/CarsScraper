@@ -1,27 +1,30 @@
 package org.automotive.scraper;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.automotive.constants.StringConstants.FAILED_TO_STRINGIFY_SCRAPING_RESULTS;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.automotive.javabean.CarInfo;
 import org.automotive.javabean.ScraperConfig;
+import org.automotive.loader.ScraperConfigLoader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import javax.annotation.PreDestroy;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.automotive.constants.StringConstants.FAILED_TO_STRINGIFY_SCRAPING_RESULTS;
+
 @Slf4j
+@NoArgsConstructor
 public abstract class AbstractScraper implements Scraper {
 
   protected ScraperConfig scraperConfig;
   protected WebDriver webDriver;
   private ObjectMapper pureObjectMapper;
 
-  @PostConstruct
-  public void init() {
-    initSession();
+  public AbstractScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper) {
+    this.pureObjectMapper = pureObjectMapper;
+    this.scraperConfig = scraperConfigLoader.loadConfig("auto.ria.com");
   }
 
   @Override
