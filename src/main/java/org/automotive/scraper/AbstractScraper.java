@@ -40,8 +40,9 @@ public abstract class AbstractScraper implements Scraper {
         searchResult.append(search());
       }
     } catch (Exception e) {
-      // TODO: come up with general and informative exception handling
+     log.error("Exception occurred during scraping. Exception: ", e);
     } finally {
+      log.warn("Terminating selenium session");
       terminateSession();
     }
     return searchResult.toString();

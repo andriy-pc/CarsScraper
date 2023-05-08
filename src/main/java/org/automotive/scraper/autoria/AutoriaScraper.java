@@ -1,9 +1,10 @@
 package org.automotive.scraper.autoria;
 
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.automotive.javabean.CarInfo;
+import org.automotive.loader.ScraperConfigLoader;
 import org.automotive.scraper.AbstractScraper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -21,8 +22,11 @@ import static org.automotive.constants.StringConstants.HREF_ATTRIBUTE_NAME;
 import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
 
 @Component
-@RequiredArgsConstructor
 public class AutoriaScraper extends AbstractScraper {
+
+  public AutoriaScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper) {
+    super(scraperConfigLoader, pureObjectMapper);
+  }
 
   @Override
   public void openSite() {
