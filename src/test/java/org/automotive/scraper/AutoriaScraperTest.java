@@ -22,7 +22,7 @@ class AutoriaScraperTest {
     void testOpenSite() {
         autoriaScraper.openSite();
         autoriaScraper.applyFilters();
-        String result = autoriaScraper.search();
+        String result = autoriaScraper.scrape();
         System.out.println(result);
     }
 }
