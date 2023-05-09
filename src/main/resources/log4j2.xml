@@ -5,12 +5,13 @@
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%X{AWSRequestId}] [%-5level] %c{1} - %m%n</pattern>
             </PatternLayout>
         </Console>
-        <RollingFile name="File" fileName="/automotive/logs/app.log" filePattern="/automotive/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="File" fileName="/automotive/logs/app.log"
+                     filePattern="/automotive/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%X{AWSRequestId}] [%-5level] %c{1} - %m%n</pattern>
             </PatternLayout>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
     </Appenders>

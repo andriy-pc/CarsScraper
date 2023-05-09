@@ -1,6 +1,14 @@
 package org.automotive.scraper.autoria;
 
+import static org.automotive.constants.EnvVarNames.AUTORIA_PAGES_TO_SCRAPE_ENV_VAR_NAME;
+import static org.automotive.constants.StringConstants.*;
+import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.automotive.javabean.CarInfo;
@@ -12,14 +20,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.automotive.constants.StringConstants.*;
-import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
 
 @Component
 public class AutoriaScraper extends AbstractScraper {
@@ -174,7 +174,10 @@ public class AutoriaScraper extends AbstractScraper {
 
   @Override
   public void nextPage() {
-    webDriver.get(webDriver.findElement(By.className(NEXT_PAGE_BUTTON_CLASSNAME)).getAttribute(HREF_ATTRIBUTE_NAME));
+    webDriver.get(
+        webDriver
+            .findElement(By.className(NEXT_PAGE_BUTTON_CLASSNAME))
+            .getAttribute(HREF_ATTRIBUTE_NAME));
   }
 
   @Override
