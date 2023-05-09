@@ -1,6 +1,6 @@
 package org.automotive;
 
-import static org.automotive.constants.StringConstants.AUTORIA_PAGES_TO_SCRAPE_ENV_VAR_NAME;
+import static org.automotive.constants.EnvVarNames.AUTORIA_PAGES_TO_SCRAPE_ENV_VAR_NAME;
 import static org.automotive.scraper.autoria.AutoriaStringConstants.DEFAULT_COUNT_OF_PAGES_TO_SCRAPE;
 import static org.automotive.utils.EnvVarUtils.getStringOrDefault;
 
