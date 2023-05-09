@@ -98,13 +98,6 @@ public class AutoriaScraper extends AbstractScraper {
   private void filterPrice() {
     if (StringUtils.isEmpty(scraperConfig.getMinPrice())
         && StringUtils.isEmpty(scraperConfig.getMaxPrice())) {
-      return;
-    }
-    if (StringUtils.isEmpty(scraperConfig.getMinPrice())) {
-      // TODO: implement
-    }
-    if (StringUtils.isEmpty(scraperConfig.getMaxPrice())) {
-      // TODO: implement
     }
   }
 

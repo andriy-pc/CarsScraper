@@ -1,6 +1,7 @@
 package org.automotive.notifications.email;
 
 import static java.lang.Boolean.TRUE;
+import static java.util.Objects.nonNull;
 import static org.automotive.constants.EnvVarNames.AUTOMOTIVE_PROCESSES_PASSWORD_ENV_VAR_NAME;
 import static org.automotive.constants.EnvVarNames.AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME;
 import static org.automotive.constants.StringConstants.GMAIL_SMTP_HOST;
@@ -8,7 +9,7 @@ import static org.automotive.constants.StringConstants.MAIL_SMTP_AUTH;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_HOST;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_PORT;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_SSL_ENABLE;
-import static org.automotive.constants.StringConstants.SMTP_PORT;
+import static org.automotive.constants.StringConstants.SMTP_TLS_PORT;
 import static org.automotive.utils.EnvVarUtils.getStringOrException;
 
 import java.util.List;
@@ -72,7 +73,7 @@ public class EmailSeder {
   private Session initSession() {
     Properties properties = new Properties();
     properties.put(MAIL_SMTP_HOST, GMAIL_SMTP_HOST);
-    properties.put(MAIL_SMTP_PORT, SMTP_PORT);
+    properties.put(MAIL_SMTP_PORT, SMTP_TLS_PORT);
     properties.put(MAIL_SMTP_SSL_ENABLE, TRUE.toString());
     properties.put(MAIL_SMTP_AUTH, TRUE.toString());
     return Session.getInstance(
@@ -86,9 +87,12 @@ public class EmailSeder {
 
   private Address[] getRecipients(
       EmailDetails emailDetails, Function<EmailDetails, List<String>> functionToGetRecipients) {
-    return functionToGetRecipients.apply(emailDetails).stream()
-        .map(this::stringToInternetAddress)
-        .toArray(Address[]::new);
+    if (nonNull(functionToGetRecipients.apply(emailDetails))) {
+      return functionToGetRecipients.apply(emailDetails).stream()
+          .map(this::stringToInternetAddress)
+          .toArray(Address[]::new);
+    }
+    return new Address[0];
   }
 
   Address stringToInternetAddress(String address) {
