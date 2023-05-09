@@ -21,4 +21,6 @@ public interface AutoriaStringConstants {
   String CLASSNAME_OF_AUTOCOMPLETE_SELECT_HTML_ELEMENT = "autocomplete-select";
   String BOLD_CLASSNAME = "bold";
   String CLASSNAME_OF_YEAR_SELECTOR_HTML_ELEMENT = "e-year";
+  String DEFAULT_COUNT_OF_PAGES_TO_SCRAPE = "1";
+  String NEXT_PAGE_BUTTON_CLASSNAME = "js-next";
 }

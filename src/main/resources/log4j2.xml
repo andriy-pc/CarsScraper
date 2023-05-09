@@ -1,14 +1,23 @@
 <Configuration status="WARN">
     <Appenders>
-        <Lambda name="Lambda">
+        <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%X{AWSRequestId}] %highlight{[%-5level]} %c{1} - %m%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%X{AWSRequestId}] [%-5level] %c{1} - %m%n</pattern>
             </PatternLayout>
-        </Lambda>
+        </Console>
+        <RollingFile name="File" fileName="/automotive/logs/app.log" filePattern="/automotive/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%X{AWSRequestId}] [%-5level] %c{1} - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+            </Policies>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Root level="INFO">
-            <AppenderRef ref="Lambda"/>
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="File"/>
         </Root>
         <Logger name="org.automotive" level="INFO"/>
         <Logger name="software.amazon.awssdk" level="WARN"/>
