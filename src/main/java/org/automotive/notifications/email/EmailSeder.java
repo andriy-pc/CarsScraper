@@ -2,20 +2,16 @@ package org.automotive.notifications.email;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.nonNull;
-import static org.automotive.constants.EnvVarNames.AUTOMOTIVE_PROCESSES_PASSWORD_ENV_VAR_NAME;
-import static org.automotive.constants.EnvVarNames.AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME;
 import static org.automotive.constants.StringConstants.GMAIL_SMTP_HOST;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_AUTH;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_HOST;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_PORT;
 import static org.automotive.constants.StringConstants.MAIL_SMTP_SSL_ENABLE;
 import static org.automotive.constants.StringConstants.SMTP_TLS_PORT;
-import static org.automotive.utils.EnvVarUtils.getStringOrException;
 
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
-import javax.annotation.PostConstruct;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -26,29 +22,21 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.automotive.exception.EnvVarMissingException;
 import org.automotive.exception.TerminateProcessException;
 import org.automotive.notifications.email.javabean.EmailDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class EmailSeder {
 
+  @Value("${email.errors.from}")
   private String fromEmail;
+  @Value("${email.errors.from}")
   private String userName;
+  @Value("${automotive.processes.password}")
   private String password;
-
-  @PostConstruct
-  private void initSessionRequiredVars() {
-    this.fromEmail =
-        getStringOrException(
-            AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME, EnvVarMissingException::new);
-    this.userName = fromEmail;
-    this.password =
-        getStringOrException(
-            AUTOMOTIVE_PROCESSES_PASSWORD_ENV_VAR_NAME, EnvVarMissingException::new);
-  }
 
   public void sendEmail(EmailDetails emailDetails) {
     try {
