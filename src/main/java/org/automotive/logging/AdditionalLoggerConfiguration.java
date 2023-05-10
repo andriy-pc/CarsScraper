@@ -39,7 +39,11 @@ public class AdditionalLoggerConfiguration extends XmlConfiguration {
     super.doConfigure();
     final LoggerContext context = (LoggerContext) LogManager.getContext(false);
     final Configuration config = context.getConfiguration();
-    final Layout<String> layout = PatternLayout.createDefaultLayout(config);
+    final Layout<String> layout = PatternLayout.newBuilder()
+            .withConfiguration(config)
+            .withPattern(
+                    "%d{yyyy-MM-dd HH:mm:ss} [%tid] [%-5level] %c{1} - %m%n")
+            .build();
     String userName =
         getStringOrException(
             AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME, EnvVarMissingException::new);
