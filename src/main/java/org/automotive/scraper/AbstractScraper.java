@@ -8,14 +8,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.PreDestroy;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.automotive.dao.ScraperConfigLoader;
+import org.automotive.dao.entity.ScraperConfig;
 import org.automotive.javabean.CarInfo;
-import org.automotive.javabean.ScraperConfig;
-import org.automotive.loader.ScraperConfigLoader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.context.annotation.Profile;
 
 @Slf4j
 @NoArgsConstructor
+@Profile("!test")
 public abstract class AbstractScraper implements Scraper {
 
   protected final AtomicInteger scrapedPages = new AtomicInteger(1);
@@ -24,9 +26,10 @@ public abstract class AbstractScraper implements Scraper {
   protected WebDriver webDriver;
   private ObjectMapper pureObjectMapper;
 
-  public AbstractScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper, String siteName) {
+  public AbstractScraper(
+      ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper, String siteName) {
     this.pureObjectMapper = pureObjectMapper;
-    this.scraperConfig = scraperConfigLoader.loadConfig(siteName);
+    this.scraperConfig = scraperConfigLoader.loadConfig(siteName).orElse(null);
   }
 
   @Override
@@ -44,7 +47,7 @@ public abstract class AbstractScraper implements Scraper {
         searchResult.append(extractCarsInfo());
       }
     } catch (Exception e) {
-     log.error("Exception occurred during scraping. Exception: ", e);
+      log.error("Exception occurred during scraping. Exception: ", e);
     } finally {
       log.warn("Terminating selenium session");
       terminateSession();
@@ -76,7 +79,8 @@ public abstract class AbstractScraper implements Scraper {
     } catch (Exception e) {
       log.error(
           "Exception occurred during stringification of the car info (title: {}). Exception: ",
-          carInfo.getTitle(), e);
+          carInfo.getTitle(),
+          e);
       return FAILED_TO_STRINGIFY_SCRAPING_RESULTS;
     }
   }

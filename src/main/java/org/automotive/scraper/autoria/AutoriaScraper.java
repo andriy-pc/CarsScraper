@@ -11,17 +11,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
+import org.automotive.dao.ScraperConfigLoader;
 import org.automotive.javabean.CarInfo;
-import org.automotive.loader.ScraperConfigLoader;
 import org.automotive.scraper.AbstractScraper;
 import org.automotive.utils.EnvVarUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("!test")
 public class AutoriaScraper extends AbstractScraper {
 
   public AutoriaScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper) {
@@ -96,9 +98,6 @@ public class AutoriaScraper extends AbstractScraper {
   }
 
   private void filterPrice() {
-    if (StringUtils.isEmpty(scraperConfig.getMinPrice())
-        && StringUtils.isEmpty(scraperConfig.getMaxPrice())) {
-    }
   }
 
   @Override

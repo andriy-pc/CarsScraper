@@ -1,4 +1,4 @@
-package org.automotive.loader;
+package org.automotive.dao;
 
 public interface ConfigLoader<T> {
 }
