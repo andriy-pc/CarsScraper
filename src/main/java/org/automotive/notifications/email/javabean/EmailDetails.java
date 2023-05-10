@@ -1,12 +1,7 @@
-package org.automotive.notifications.email.pojo;
+package org.automotive.notifications.email.javabean;
 
 import java.util.List;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

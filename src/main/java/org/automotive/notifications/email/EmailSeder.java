@@ -28,7 +28,7 @@ import javax.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.automotive.exception.EnvVarMissingException;
 import org.automotive.exception.TerminateProcessException;
-import org.automotive.notifications.email.pojo.EmailDetails;
+import org.automotive.notifications.email.javabean.EmailDetails;
 import org.springframework.stereotype.Component;
 
 @Component
