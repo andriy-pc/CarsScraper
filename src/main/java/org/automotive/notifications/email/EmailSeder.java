@@ -31,15 +31,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EmailSeder {
 
-  @Value("${email.errors.from}")
+  @Value("${automotive.processes.username}")
   private String fromEmail;
-  @Value("${email.errors.from}")
+
+  @Value("${automotive.processes.username}")
   private String userName;
+
   @Value("${automotive.processes.password}")
   private String password;
 
   public void sendEmail(EmailDetails emailDetails) {
     try {
+      log.info(
+          "Sending an email to: {}; with subject: {}",
+          emailDetails.getTo(),
+          emailDetails.getSubject());
       Message message = new MimeMessage(initSession());
       message.setFrom(new InternetAddress(fromEmail));
       message.addRecipients(
