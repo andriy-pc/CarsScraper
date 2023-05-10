@@ -2,7 +2,7 @@
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%X{AWSRequestId}] [%-5level] %c{1} - %m%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%tid] [%-5level] %c{1} - %m%n</pattern>
             </PatternLayout>
         </Console>
         <RollingFile name="File" fileName="/automotive/logs/app.log"

@@ -1,6 +1,5 @@
 package org.automotive.scraper.autoria;
 
-import static org.automotive.constants.EnvVarNames.AUTORIA_PAGES_TO_SCRAPE_ENV_VAR_NAME;
 import static org.automotive.constants.StringConstants.*;
 import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
 
@@ -14,17 +13,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.automotive.dao.ScraperConfigLoader;
 import org.automotive.javabean.CarInfo;
 import org.automotive.scraper.AbstractScraper;
-import org.automotive.utils.EnvVarUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @Profile("!test")
 public class AutoriaScraper extends AbstractScraper {
+
+  @Value("${auto.ria.pages.to.scrape}")
+  private Integer pagesToScrape;
 
   public AutoriaScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper) {
     super(scraperConfigLoader, pureObjectMapper, AUTORIA_SITE_NAME);
@@ -97,8 +99,7 @@ public class AutoriaScraper extends AbstractScraper {
     yearElement.click();
   }
 
-  private void filterPrice() {
-  }
+  private void filterPrice() {}
 
   @Override
   public void search() {
@@ -174,9 +175,6 @@ public class AutoriaScraper extends AbstractScraper {
 
   @Override
   public boolean proceedSearching() {
-    return scrapedPages.get()
-        < Integer.parseInt(
-            EnvVarUtils.getStringOrDefault(
-                AUTORIA_PAGES_TO_SCRAPE_ENV_VAR_NAME, DEFAULT_COUNT_OF_PAGES_TO_SCRAPE));
+    return scrapedPages.get() < pagesToScrape;
   }
 }

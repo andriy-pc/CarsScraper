@@ -1,13 +1,9 @@
 package org.automotive.logging;
 
-import static org.automotive.constants.EnvVarNames.AUTOMOTIVE_PROCESSES_PASSWORD_ENV_VAR_NAME;
-import static org.automotive.constants.EnvVarNames.AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME;
-import static org.automotive.constants.EnvVarNames.LOGGING_ERRORS_RECEIVER_ENV_VAR_NAME;
 import static org.automotive.constants.StringConstants.BASE_PACKAGE_NAME;
 import static org.automotive.constants.StringConstants.GMAIL_SMTP_HOST;
 import static org.automotive.constants.StringConstants.SMTPS_PROTOCOL;
 import static org.automotive.constants.StringConstants.SMTP_SSL_PORT;
-import static org.automotive.utils.EnvVarUtils.getStringOrException;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -21,13 +17,21 @@ import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.xml.XmlConfiguration;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.automotive.exception.EnvVarMissingException;
-import org.automotive.utils.EnvVarUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 public class AdditionalLoggerConfiguration extends XmlConfiguration {
 
   private static final String APPENDER_NAME = "email appender";
   private static final String EMAIL_SUBJECT = "Cars scraper errors";
+  
+  @Value("${automotive.processes.username}")
+  private String automotiveProcessesUsername;
+  @Value("${automotive.processes.password}")
+  private String automotiveProcessesPassword;
+  @Value("${email.errors.to}")
+  private String emailErrorsTo;  
+  @Value("${email.errors.from}")
+  private String emailErrorsFrom;
 
   public AdditionalLoggerConfiguration(
       final LoggerContext loggerContext, final ConfigurationSource configSource) {
@@ -44,25 +48,19 @@ public class AdditionalLoggerConfiguration extends XmlConfiguration {
             .withPattern(
                     "%d{yyyy-MM-dd HH:mm:ss} [%tid] [%-5level] %c{1} - %m%n")
             .build();
-    String userName =
-        getStringOrException(
-            AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME, EnvVarMissingException::new);
-    String pass =
-        getStringOrException(
-            AUTOMOTIVE_PROCESSES_PASSWORD_ENV_VAR_NAME, EnvVarMissingException::new);
 
     final Appender appender =
         new SmtpAppender.Builder()
             .setConfiguration(config)
             .setName(APPENDER_NAME)
-            .setTo(getLoggerEmailTo())
-            .setFrom(getLoggerEmailFrom())
+            .setTo(emailErrorsTo)
+            .setFrom(emailErrorsFrom)
             .setSubject(EMAIL_SUBJECT)
             .setSmtpHost(GMAIL_SMTP_HOST)
             .setSmtpProtocol(SMTPS_PROTOCOL)
             .setSmtpPort(Integer.parseInt(SMTP_SSL_PORT))
-            .setSmtpUsername(userName)
-            .setSmtpPassword(pass)
+            .setSmtpUsername(automotiveProcessesUsername)
+            .setSmtpPassword(automotiveProcessesPassword)
             .setLayout(layout)
             .build();
 
@@ -80,15 +78,5 @@ public class AdditionalLoggerConfiguration extends XmlConfiguration {
             null);
     loggerConfig.addAppender(appender, Level.ERROR, null);
     addLogger(loggerConfig.getName(), loggerConfig);
-  }
-
-  private static String getLoggerEmailTo() {
-    return EnvVarUtils.getStringOrException(
-        LOGGING_ERRORS_RECEIVER_ENV_VAR_NAME, EnvVarMissingException::new);
-  }
-
-  private String getLoggerEmailFrom() {
-    return getStringOrException(
-        AUTOMOTIVE_PROCESSES_USERNAME_ENV_VAR_NAME, EnvVarMissingException::new);
   }
 }
