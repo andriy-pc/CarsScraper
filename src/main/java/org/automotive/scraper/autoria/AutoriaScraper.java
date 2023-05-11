@@ -6,30 +6,31 @@ import static org.automotive.scraper.autoria.AutoriaStringConstants.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.automotive.dao.ScraperConfigLoader;
+import org.automotive.dao.ScrapingHistoryDAO;
 import org.automotive.javabean.CarInfo;
 import org.automotive.scraper.AbstractScraper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @Profile("!test")
-public class AutoriaScraper extends AbstractScraper {
+public class AutoriaScraper extends AbstractScraper<CarInfo> {
 
-  @Value("${auto.ria.pages.to.scrape}")
-  private Integer pagesToScrape;
-
-  public AutoriaScraper(ScraperConfigLoader scraperConfigLoader, ObjectMapper pureObjectMapper) {
-    super(scraperConfigLoader, pureObjectMapper, AUTORIA_SITE_NAME);
+  public AutoriaScraper(
+      ScraperConfigLoader scraperConfigLoader,
+      ObjectMapper pureObjectMapper,
+      ScrapingHistoryDAO scrapingHistoryDAO) {
+    super(scraperConfigLoader, pureObjectMapper, AUTORIA_SITE_NAME, scrapingHistoryDAO);
   }
 
   @Override
@@ -114,14 +115,14 @@ public class AutoriaScraper extends AbstractScraper {
   }
 
   @Override
-  public String extractCarsInfo() {
+  public Map<String, CarInfo> extractCarsInfo() {
     List<WebElement> cars = webDriver.findElements(By.className(CLASSNAME_OF_SINGLE_RESULT_ENTRY));
     return cars.stream()
         .map(this::extractCarInfo)
-        .collect(Collectors.joining(System.lineSeparator()));
+        .collect(Collectors.toMap(CarInfo::getKey, Function.identity()));
   }
 
-  private String extractCarInfo(WebElement carWebElement) {
+  private CarInfo extractCarInfo(WebElement carWebElement) {
     String title =
         carWebElement
             .findElement(By.className(CLASSNAME_OF_TITLE_OF_SINGLE_RESULT))
@@ -153,16 +154,18 @@ public class AutoriaScraper extends AbstractScraper {
             .findElement(By.className(CLASSNAME_OF_ELEMENT_WITH_HREF_OF_SINGLE_RESULT))
             .getAttribute(HREF_ATTRIBUTE_NAME);
 
-    return stringifyCarInfo(
-        CarInfo.builder()
-            .title(title)
-            .price(price)
-            .mileage(mileage)
-            .location(location)
-            .fuelType(fuelType)
-            .transmissionType(transmissionType)
-            .link(link)
-            .build());
+    fillScrapedKeys(link);
+
+    return CarInfo.builder()
+        .title(title)
+        .price(price)
+        .mileage(mileage)
+        .location(location)
+        .fuelType(fuelType)
+        .transmissionType(transmissionType)
+        .link(link)
+        .key(link)
+        .build();
   }
 
   @Override
@@ -174,7 +177,7 @@ public class AutoriaScraper extends AbstractScraper {
   }
 
   @Override
-  public boolean proceedSearching() {
-    return scrapedPages.get() < pagesToScrape;
+  protected void fillScrapedKeys(String... keys) {
+    this.scrapedKeys.addAll(Arrays.asList(keys));
   }
 }

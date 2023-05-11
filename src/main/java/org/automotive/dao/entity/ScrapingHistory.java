@@ -1,8 +1,6 @@
 package org.automotive.dao.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor
@@ -16,5 +14,9 @@ public class ScrapingHistory {
 
   @Id
   private Integer id;
+  
+  @ManyToOne
+  @JoinColumn(name = "scraper_config_id", referencedColumnName = "id")
+  private ScraperConfig scraperConfig;
   private String lastScrapedKey;
 }

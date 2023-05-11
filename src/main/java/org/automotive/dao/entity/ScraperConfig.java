@@ -22,8 +22,9 @@ public class ScraperConfig {
   private String maxYear;
   private String minPrice;
   private String maxPrice;
+  private Integer firstRunPagesCount;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "site_id")
+  @JoinColumn(name = "site_id", referencedColumnName = "id")
   private Site site;
 }

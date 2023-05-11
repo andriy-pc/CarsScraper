@@ -1,6 +1,9 @@
 package org.automotive.scraper;
 
-public interface Scraper {
+import java.util.Map;
+import org.automotive.javabean.CarInfo;
+
+public interface Scraper<T extends CarInfo> {
 
   String scrape();
 
@@ -10,7 +13,7 @@ public interface Scraper {
 
   void search();
 
-  String extractCarsInfo();
+  Map<String, T> extractCarsInfo();
 
   void nextPage();
 

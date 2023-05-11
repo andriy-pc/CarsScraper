@@ -17,6 +17,7 @@ import lombok.Setter;
 @Builder
 public class CarInfo {
 
+  private String key;
   private String title;
   private String price;
   private String mileage;
